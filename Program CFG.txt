@@ -1,0 +1,104 @@
+//***********************************//
+//									 //
+//			PROGRAM CFG RULES		 //
+//									 //
+//***********************************//
+
+Goal -> MainClass CD <EOF>
+
+CD -> ClassDeclaration CD | E
+
+
+MainClass -> "class" Identifier "{" "public" "static" "void" "main" "(" "String" "[" "]" Identifier ")" "{" Statement "}" "}"
+
+
+ClassDeclaration -> "class" Identifier Extends "{" VD MD "}"
+
+
+Extends -> "extends" Identifier | E
+
+
+VD -> VarDeclaration VD | E
+
+
+MD -> MethodDeclaration MD| E
+
+
+VarDeclaration -> Type Identifier ";" 
+
+
+MethodDeclaration -> Modifier Type Identifier "(" Parameters ")" "{" VD ST "return" Expression ";" "}"
+
+
+Modifier -> "public" | "private"
+
+
+Parameters -> Type Identifier ParametersList | E
+
+
+ParametersList -> "," Type Identifier ParametersList | E
+
+
+
+ST -> Statement ST | E
+ 
+
+Type ->  DataType Bracket 
+
+DataType -> "int" 
+		| "boolean"
+		| "float"
+		| "String"
+		| "char"
+
+
+Bracket -> "[" "]" | E
+
+
+Statement -> "{" ST "}" 
+		| "if" "(" Expression ")" Statement Else
+		| "while" "(" Expression ")" Statement 
+		| "System.out.println" "(" Expression ")" ";" 
+		| Identifier SingleOrArray  
+
+Else -> "else" Statement | E
+
+SingleOrArray -> "=" Expression ";" | "[" Expression "]" "=" Expression ";"
+
+
+Expression -> <INTEGER_LITERAL> ExpressionRecursionFix
+		| "true" ExpressionRecursionFix
+		| "false" ExpressionRecursionFix
+		| Identifier ExpressionRecursionFix
+		| "this" ExpressionRecursionFix
+		| "new" NewObject ExpressionRecursionFix
+		| "!" Expression ExpressionRecursionFix
+		| "(" Expression ")" ExpressionRecursionFix
+
+
+ExpressionRecursionFix -> Operations ExpressionRecursionFix | E
+
+
+Operations -> BinaryOperations Expression 
+		| "[" Expression "]" 
+		| "." Dot
+
+
+BinaryOperations -> "&&" | "<" | "+" | "-" | "*" 
+
+
+Dot -> "length" 
+		| Identifier "(" ExpOnlyOne EXP ")"
+
+
+ExpOnlyOne -> Expression | E
+
+
+EXP -> "," Expression EXP | E 
+
+
+NewObject -> "int" "[" Expression "]"
+		| Identifier "(" ")" 
+
+
+Identifier -> <IDENTIFIER>
